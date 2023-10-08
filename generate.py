@@ -12,12 +12,12 @@ fg = tuple(map(lambda x:round(x*255),rgb))
 bg = (240, 240, 240)
 
 img = Image.new('RGB', (size, size), bg)
-d = size // (5 + 1)
-r = lambda img,x,y,d,c:any(img.putpixel((i,j),c) for i in range(x,x+d) for j in range(y,y+d))
+r = size // (5 + 1)
+box = lambda img,x,y,r,c: any(img.putpixel((i,j),c) for i in range(x,x+r) for j in range(y,y+r))
 
 for y in range(5):
     for x in range(5):
         if m[[2,1,0,1,2][x]*5+y]%2==0:
-            r(img, x*d+d//2, y*d+d//2, d, fg)
+            box(img, x*r+r//2, y*r+r//2, r, fg)
 
 img.save(f'{id}.png')
