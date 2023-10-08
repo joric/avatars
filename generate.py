@@ -11,7 +11,7 @@ rgb = colorsys.hls_to_rgb(h/16/256,(960-l)/5/256,(832-s)/5/256)
 fg,bg = tuple(map(lambda x:round(x*255), rgb)), (240, 240, 240)
 img = Image.new('RGB', (size, size), bg)
 r = size // (5 + 1)
-box = lambda img,x,y,r,c:any(img.putpixel((i, j), c) for i in range(x, x+r) for j in range(y, y+r))
+box = lambda img,x,y,r,c: any(img.putpixel((i, j), c) for i in range(x, x+r) for j in range(y, y+r))
 any(box(img, x*r+r//2, y*r+r//2, r, fg) for x in range(5) for y in range(5) if m[[2,1,0,1,2][x]*5+y]%2==0)
 
 img.save(f'{id}.png')
