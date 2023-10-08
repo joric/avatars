@@ -1,7 +1,7 @@
 import hashlib, colorsys
 from PIL import Image
 
-id = 852547 # joric's id, see https://api.github.com/users/joric, https://github.com/identicons/joric.png
+id = 852547 # joric's id, see https://api.github.com/users/joric
 size = 420
 
 h = hashlib.md5(str(id).encode('utf-8')).hexdigest()
