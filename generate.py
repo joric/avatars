@@ -13,6 +13,7 @@ bg = (240, 240, 240)
 img = Image.new('RGB', (size, size), bg)
 r = lambda img,x,y,d,c:any(img.putpixel((i,j),c) for i in range(x,x+d) for j in range(y,y+d))
 d = size // (5 + 1)
+
 for y in range(5):
     for x in range(5):
         if m[[2,1,0,1,2][x]*5+y]%2==0:
