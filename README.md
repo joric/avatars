@@ -11,6 +11,5 @@ Original size is 420x420 pixels. See `generate.py` for details.
 ## References
 
 * https://github.com/kashav/identicon
-* https://github.com/ShineyDev/github.identicon
+* https://github.com/stewartlord/identicon.js
 * https://github.com/Scientificmagic/identicon
-
