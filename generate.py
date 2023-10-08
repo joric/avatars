@@ -17,4 +17,5 @@ for y in range(5):
     for x in range(5):
         if m[[2,1,0,1,2][x]*5+y]%2==0:
             r(img, x*d+d//2, y*d+d//2, d, fg)
+
 img.save(f'{id}.png')
