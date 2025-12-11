@@ -5,7 +5,9 @@ id = 852547 # joric's id, see https://api.github.com/users/joric
 size = 420  # size in pixels
 
 h = hashlib.md5(str(id).encode('utf-8')).hexdigest()
+print(h)
 m = list(map(lambda c:int(c, 16), h))
+print(m)
 h,l,s = m[25]<<8|m[26]<<4|m[27], m[30]<<4|m[31], m[28]<<4|m[29]
 rgb = colorsys.hls_to_rgb(h/16/256, (960-l)/5/256, (832-s)/5/256)
 c = tuple(map(lambda x:round(x*255), rgb))
