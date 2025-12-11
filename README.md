@@ -1,6 +1,6 @@
 # Identicon
 
-Original GitHub avatars (identicons) generator in Python
+Original (reverse-engineered) GitHub avatars (identicons) generator
 
 * Live Demo: https://joric.github.io/avatars/
 
