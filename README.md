@@ -2,6 +2,8 @@
 
 Original GitHub avatars (identicons) generator in Python
 
+* Live Demo: https://joric.github.io/avatars/
+
 ![](https://github.com/identicons/joric.png)
 
 The picture above is an identicon for user "joric" with id 852547, see user id here https://api.github.com/users/joric
