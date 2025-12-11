@@ -13,7 +13,7 @@
 <body>
   <h2>GitHub Avatar Generator</h2>
   <form id="f">
-    <input id="u" placeholder="GitHub username" />
+    <input id="u" placeholder="GitHub username" autofocus/>
     <button type="submit">Generate</button>
   </form>
   <canvas id="c" width="420" height="420"></canvas>
@@ -188,10 +188,8 @@ async function draw(id) {
   ctx.fillRect(0,0,size,size);
 
   //const h = await md5hex(String(id));
-
   const h = md5(String(id));
   const m = h.split('').map(c => parseInt(c,16));
-
   const H = (m[25]<<8 | m[26]<<4 | m[27]) / (16*256);
   const L = (960 - (m[30]<<4 | m[31])) / (5*256);
   const S = (832 - (m[28]<<4 | m[29])) / (5*256);
@@ -216,7 +214,9 @@ async function draw(id) {
 document.getElementById('f').onsubmit = async e => {
   e.preventDefault();
   try {
-    const id = await getId(document.getElementById('u').value.trim());
+    let u = document.getElementById('u').value.trim();
+    const id = await getId(u);
+    console.log('username', u, 'id', id);
     draw(id);
   } catch(e) {
     alert(e.message);
