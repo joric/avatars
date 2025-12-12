@@ -25,6 +25,9 @@ function generate() {
   //let id = 852547;
 
   const hash = md5(String(id));
+
+  document.getElementById('hash').textContent = hash;
+
   //console.log(hash, hsl2rgb);
 
   const m = hash.split('').map(c => parseInt(c,16));
@@ -49,9 +52,31 @@ function generate() {
 
 }
 
+async function fetch_id() {
+  let uname_ctrl = document.getElementById('username');
+  let uid_ctrl = document.getElementById('userid');
+  let username = uname_ctrl.value.trim();
+  location.hash = username;
+  const id = await getId(username);
+  uid_ctrl.value = id;
+  uid_ctrl.select();
+  generate();
+}
+
 window.onload = async function() {
   let uname_ctrl = document.getElementById('username');
   let uid_ctrl = document.getElementById('userid');
+  let select_ctrl = document.getElementById('select');
+
+  select_ctrl.onchange = (e)=> {
+    let username = e.target.value;
+    if (username) {
+      uname_ctrl.value = username;
+      fetch_id();
+    } else {
+      resetUsername();
+    }
+  }
 
   if (location.hash.length > 1) {
     const username = location.hash.slice(1);
@@ -61,14 +86,16 @@ window.onload = async function() {
     generate();
   }
 
-  function clearUsername() {
-     document.getElementById('username').value = '';
-     document.getElementById('fetchBtn').disabled = true;
+  function resetUsername() {
+    document.getElementById('username').value = '';
+    document.getElementById('fetchBtn').disabled = true;
+    location.hash = '';
+    document.getElementById('select').selectedIndex = 0;
   }
 
   document.getElementById('randomize').onsubmit = async e => {
     e.preventDefault();
-    clearUsername();
+    resetUsername();
     uid_ctrl.value = Math.floor(Math.random() * 10000000);
     uid_ctrl.select();
     generate();
@@ -77,12 +104,7 @@ window.onload = async function() {
   document.getElementById('fetch').onsubmit = async e => {
     e.preventDefault();
     try {
-      let username = uname_ctrl.value.trim();
-      location.hash = username;
-      const id = await getId(username);
-      uid_ctrl.value = id;
-      uid_ctrl.select();
-      generate();
+      fetch_id();
     } catch(e) {
       alert(e.message);
     }
@@ -92,7 +114,7 @@ window.onload = async function() {
     uid_ctrl.addEventListener(e, onChange, false);
    });
 
-  uid_ctrl.addEventListener('input', clearUsername);
+  uid_ctrl.addEventListener('input', resetUsername);
 
   uname_ctrl.addEventListener('input', function() {
     document.getElementById('fetchBtn').disabled = uname_ctrl.value.length==0;
