@@ -52,18 +52,21 @@ function generate() {
 
 }
 
-async function fetch_id() {
+async function loadUserAndGenerate(username) {
   let uname_ctrl = document.getElementById('username');
   let uid_ctrl = document.getElementById('userid');
-  let username = uname_ctrl.value.trim();
-  location.hash = username;
-  const id = await getId(username);
-  uid_ctrl.value = id;
-  uid_ctrl.select();
-  generate();
+  try {
+    const id = await getId(username);
+    uname_ctrl.value = username;
+    uid_ctrl.value = id;
+    generate();
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
-window.onload = async function() {
+window.onload = function() {
+
   let uname_ctrl = document.getElementById('username');
   let uid_ctrl = document.getElementById('userid');
   let select_ctrl = document.getElementById('select');
@@ -81,14 +84,6 @@ window.onload = async function() {
     } else {
       resetUsername();
     }
-  }
-
-  if (location.hash.length > 1) {
-    const username = location.hash.slice(1);
-    const id = await getId(username);
-    uname_ctrl.value = username;
-    uid_ctrl.value = id;
-    generate();
   }
 
   function resetUsername() {
@@ -109,7 +104,12 @@ window.onload = async function() {
   document.getElementById('fetch').onsubmit = async e => {
     e.preventDefault();
     try {
-      fetch_id();
+      let username = uname_ctrl.value.trim();
+      location.hash = username;
+      const id = await getId(username);
+      uid_ctrl.value = id;
+      uid_ctrl.select();
+      generate();
     } catch(e) {
       alert(e.message);
     }
@@ -117,17 +117,23 @@ window.onload = async function() {
 
   'input keyup keydown keypress change'.split(' ').forEach(function(e){
     uid_ctrl.addEventListener(e, onChange, false);
-   });
+  });
 
   uid_ctrl.addEventListener('input', resetUsername);
 
   uname_ctrl.addEventListener('input', function() {
     document.getElementById('fetchBtn').disabled = uname_ctrl.value.length==0;
+    document.getElementById('select').selectedIndex = 0;
   })
 
   uid_ctrl.select();
 
-  generate();
+  if (location.hash.length > 1) {
+    const username = location.hash.slice(1);
+    loadUserAndGenerate(username);
+  } else {
+    generate();
+  }
 
 };
 
