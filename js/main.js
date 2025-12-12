@@ -70,10 +70,11 @@ window.onload = async function() {
 
   select_ctrl.onchange = (e)=> {
     let username = e.target.options[e.target.selectedIndex].text;
-    let value = e.target.value;
+    let id = e.target.value;
     if (username) {
       uname_ctrl.value = username;
-      uid_ctrl.value = value;
+      location.hash = username;
+      uid_ctrl.value = id;
       uid_ctrl.select();
       generate();
     } else {
