@@ -69,10 +69,13 @@ window.onload = async function() {
   let select_ctrl = document.getElementById('select');
 
   select_ctrl.onchange = (e)=> {
-    let username = e.target.value;
+    let username = e.target.options[e.target.selectedIndex].text;
+    let value = e.target.value;
     if (username) {
       uname_ctrl.value = username;
-      fetch_id();
+      uid_ctrl.value = value;
+      uid_ctrl.select();
+      generate();
     } else {
       resetUsername();
     }
