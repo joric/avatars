@@ -1,251 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  <title>Joric's GitHub Avatar Generator</title>
-  <link rel="shortcut icon" type="image/x-icon" href="data:," />
-
-  <meta property="og:image" content="https://joric.github.io/avatars/852547.png" />
-  <meta property="og:site_name" content="Joric" />
-  <meta property="og:type" content="object" />
-  <meta property="og:title" content="Joric's GitHub Avatar Generator" />
-  <meta property="og:description" content="Original (reverse-engineered) GitHub avatars (identicons) generator" />
-
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    input { padding: 6px; }
-    button { padding: 6px 12px; }
-    canvas { margin-top: 20px; border: 1px solid #ccc; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Joric's GitHub Avatar Generator</title>
+<link rel="shortcut icon" type="image/x-icon" href="data:," />
+<meta property="og:image" content="https://joric.github.io/avatars/852547.png" />
+<meta property="og:site_name" content="Joric" />
+<meta property="og:type" content="object" />
+<meta property="og:title" content="Joric's GitHub Avatar Generator" />
+<meta property="og:description" content="Original (reverse-engineered) GitHub avatars (identicons) generator" />
+<script src="js/pnglib.js"></script>
+<script src="js/md5.js"></script>
+<script src="js/identicon.js"></script>
+<script src="js/hsl2rgb.js"></script>
+<script src="js/main.js"></script>
 </head>
 <body>
-  <h2>GitHub Avatar Generator</h2>
-  <form id="f">
-    <input id="u" placeholder="GitHub username" autofocus/>
-    <button type="submit">Generate</button>
-  </form>
-  <canvas id="c" width="420" height="420"></canvas>
-
-<script>
-async function getId(username) {
-  const r = await fetch(`https://api.github.com/users/${username}`);
-  if (!r.ok) throw new Error(`Could not fetch user (${r.status})`);
-  const j = await r.json();
-  console.log('username', username, 'id', j.id);
-  return j.id;
-}
-
-function md5hex(str) {
-  return md5(str);
-}
-
-// Real MD5 implementation (compact, public-domain style)
-function md5(s) {
-  function rotateLeft(lValue, iShiftBits) { return (lValue<<iShiftBits) | (lValue>>> (32 - iShiftBits)); }
-  function addUnsigned(lX,lY){
-    const lX4 = (lX & 0x40000000);
-    const lY4 = (lY & 0x40000000);
-    const lX8 = (lX & 0x80000000);
-    const lY8 = (lY & 0x80000000);
-    const lResult = (lX & 0x3FFFFFFF)+(lY & 0x3FFFFFFF);
-    if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-    if (lX4 | lY4) {
-      if (lResult & 0x40000000) return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-      else return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-    }
-    else return (lResult ^ lX8 ^ lY8);
-  }
-  function F(x,y,z){ return (x & y) | ((~x) & z); }
-  function G(x,y,z){ return (x & z) | (y & (~z)); }
-  function H(x,y,z){ return x ^ y ^ z; }
-  function I(x,y,z){ return y ^ (x | (~z)); }
-  function FF(a,b,c,d,x,s,ac){ a = addUnsigned(a, addUnsigned(addUnsigned(F(b,c,d), x), ac)); return addUnsigned(rotateLeft(a, s), b); }
-  function GG(a,b,c,d,x,s,ac){ a = addUnsigned(a, addUnsigned(addUnsigned(G(b,c,d), x), ac)); return addUnsigned(rotateLeft(a, s), b); }
-  function HH(a,b,c,d,x,s,ac){ a = addUnsigned(a, addUnsigned(addUnsigned(H(b,c,d), x), ac)); return addUnsigned(rotateLeft(a, s), b); }
-  function II(a,b,c,d,x,s,ac){ a = addUnsigned(a, addUnsigned(addUnsigned(I(b,c,d), x), ac)); return addUnsigned(rotateLeft(a, s), b); }
-  function toWordArray(str){
-    const lMessageLength = str.length;
-    const numberOfWordsTemp1 = lMessageLength + 8;
-    const numberOfWordsTemp2 = (numberOfWordsTemp1 - (numberOfWordsTemp1 % 64))/64;
-    const numberOfWords = (numberOfWordsTemp2 + 1) * 16;
-    const wordArray = new Array(numberOfWords - 1);
-    let i = 0; let bytePosition = 0; let byteCount = 0;
-    while (byteCount < lMessageLength) {
-      const wordCount = (byteCount - (byteCount % 4))/4;
-      bytePosition = (byteCount % 4) * 8;
-      wordArray[wordCount] = (wordArray[wordCount] | (str.charCodeAt(byteCount) << bytePosition)) >>> 0;
-      byteCount++;
-    }
-    const wordCount = (byteCount - (byteCount % 4))/4;
-    bytePosition = (byteCount % 4) * 8;
-    wordArray[wordCount] = wordArray[wordCount] | (0x80 << bytePosition);
-    wordArray[numberOfWords - 2] = (lMessageLength << 3) >>> 0;
-    wordArray[numberOfWords - 1] = (lMessageLength >>> 29) >>> 0;
-    return wordArray;
-  }
-  function wordToHex(lValue){
-    let wordToHexValue = "";
-    for (let i = 0; i <= 3; i++) {
-      const byte = (lValue >>> (i * 8)) & 255;
-      wordToHexValue += ('0' + byte.toString(16)).slice(-2);
-    }
-    return wordToHexValue;
-  }
-
-  const x = toWordArray(s);
-  let a = 0x67452301;
-  let b = 0xEFCDAB89;
-  let c = 0x98BADCFE;
-  let d = 0x10325476;
-  for (let k = 0; k < x.length; k += 16) {
-    const AA = a, BB = b, CC = c, DD = d;
-    a = FF(a,b,c,d,x[k+0],7,0xd76aa478);
-    d = FF(d,a,b,c,x[k+1],12,0xe8c7b756);
-    c = FF(c,d,a,b,x[k+2],17,0x242070db);
-    b = FF(b,c,d,a,x[k+3],22,0xc1bdceee);
-    a = FF(a,b,c,d,x[k+4],7,0xf57c0faf);
-    d = FF(d,a,b,c,x[k+5],12,0x4787c62a);
-    c = FF(c,d,a,b,x[k+6],17,0xa8304613);
-    b = FF(b,c,d,a,x[k+7],22,0xfd469501);
-    a = FF(a,b,c,d,x[k+8],7,0x698098d8);
-    d = FF(d,a,b,c,x[k+9],12,0x8b44f7af);
-    c = FF(c,d,a,b,x[k+10],17,0xffff5bb1);
-    b = FF(b,c,d,a,x[k+11],22,0x895cd7be);
-    a = FF(a,b,c,d,x[k+12],7,0x6b901122);
-    d = FF(d,a,b,c,x[k+13],12,0xfd987193);
-    c = FF(c,d,a,b,x[k+14],17,0xa679438e);
-    b = FF(b,c,d,a,x[k+15],22,0x49b40821);
-
-    a = GG(a,b,c,d,x[k+1],5,0xf61e2562);
-    d = GG(d,a,b,c,x[k+6],9,0xc040b340);
-    c = GG(c,d,a,b,x[k+11],14,0x265e5a51);
-    b = GG(b,c,d,a,x[k+0],20,0xe9b6c7aa);
-    a = GG(a,b,c,d,x[k+5],5,0xd62f105d);
-    d = GG(d,a,b,c,x[k+10],9,0x02441453);
-    c = GG(c,d,a,b,x[k+15],14,0xd8a1e681);
-    b = GG(b,c,d,a,x[k+4],20,0xe7d3fbc8);
-    a = GG(a,b,c,d,x[k+9],5,0x21e1cde6);
-    d = GG(d,a,b,c,x[k+14],9,0xc33707d6);
-    c = GG(c,d,a,b,x[k+3],14,0xf4d50d87);
-    b = GG(b,c,d,a,x[k+8],20,0x455a14ed);
-    a = GG(a,b,c,d,x[k+13],5,0xa9e3e905);
-    d = GG(d,a,b,c,x[k+2],9,0xfcefa3f8);
-    c = GG(c,d,a,b,x[k+7],14,0x676f02d9);
-    b = GG(b,c,d,a,x[k+12],20,0x8d2a4c8a);
-
-    a = HH(a,b,c,d,x[k+5],4,0xfffa3942);
-    d = HH(d,a,b,c,x[k+8],11,0x8771f681);
-    c = HH(c,d,a,b,x[k+11],16,0x6d9d6122);
-    b = HH(b,c,d,a,x[k+14],23,0xfde5380c);
-    a = HH(a,b,c,d,x[k+1],4,0xa4beea44);
-    d = HH(d,a,b,c,x[k+4],11,0x4bdecfa9);
-    c = HH(c,d,a,b,x[k+7],16,0xf6bb4b60);
-    b = HH(b,c,d,a,x[k+10],23,0xbebfbc70);
-    a = HH(a,b,c,d,x[k+13],4,0x289b7ec6);
-    d = HH(d,a,b,c,x[k+0],11,0xeaa127fa);
-    c = HH(c,d,a,b,x[k+3],16,0xd4ef3085);
-    b = HH(b,c,d,a,x[k+6],23,0x04881d05);
-    a = HH(a,b,c,d,x[k+9],4,0xd9d4d039);
-    d = HH(d,a,b,c,x[k+12],11,0xe6db99e5);
-    c = HH(c,d,a,b,x[k+15],16,0x1fa27cf8);
-    b = HH(b,c,d,a,x[k+2],23,0xc4ac5665);
-
-    a = II(a,b,c,d,x[k+0],6,0xf4292244);
-    d = II(d,a,b,c,x[k+7],10,0x432aff97);
-    c = II(c,d,a,b,x[k+14],15,0xab9423a7);
-    b = II(b,c,d,a,x[k+5],21,0xfc93a039);
-    a = II(a,b,c,d,x[k+12],6,0x655b59c3);
-    d = II(d,a,b,c,x[k+3],10,0x8f0ccc92);
-    c = II(c,d,a,b,x[k+10],15,0xffeff47d);
-    b = II(b,c,d,a,x[k+1],21,0x85845dd1);
-    a = II(a,b,c,d,x[k+8],6,0x6fa87e4f);
-    d = II(d,a,b,c,x[k+15],10,0xfe2ce6e0);
-    c = II(c,d,a,b,x[k+6],15,0xa3014314);
-    b = II(b,c,d,a,x[k+13],21,0x4e0811a1);
-    a = II(a,b,c,d,x[k+4],6,0xf7537e82);
-    d = II(d,a,b,c,x[k+11],10,0xbd3af235);
-    c = II(c,d,a,b,x[k+2],15,0x2ad7d2bb);
-    b = II(b,c,d,a,x[k+9],21,0xeb86d391);
-
-    a = addUnsigned(a, AA);
-    b = addUnsigned(b, BB);
-    c = addUnsigned(c, CC);
-    d = addUnsigned(d, DD);
-  }
-  return [wordToHex(a), wordToHex(b), wordToHex(c), wordToHex(d)].join('');
-}
-
-function hlsToRgb(h, l, s) {
-  if (s === 0) return [l,l,l];
-  const hue2rgb = (p,q,t)=>{
-    if (t<0) t+=1;
-    if (t>1) t-=1;
-    if (t<1/6) return p+(q-p)*6*t;
-    if (t<1/2) return q;
-    if (t<2/3) return p+(q-p)*(2/3 - t)*6;
-    return p;
-  };
-  const q = l < 0.5 ? l*(1+s) : l+s - l*s;
-  const p = 2*l - q;
-  return [ hue2rgb(p,q,h+1/3), hue2rgb(p,q,h), hue2rgb(p,q,h-1/3) ];
-}
-
-async function draw(id) {
-  const size = 420;
-  const ctx = document.getElementById('c').getContext('2d');
-  ctx.fillStyle = 'rgb(240,240,240)';
-  ctx.fillRect(0,0,size,size);
-
-  //const h = await md5hex(String(id));
-  const h = md5(String(id));
-  const m = h.split('').map(c => parseInt(c,16));
-  const H = (m[25]<<8 | m[26]<<4 | m[27]) / (16*256);
-  const L = (960 - (m[30]<<4 | m[31])) / (5*256);
-  const S = (832 - (m[28]<<4 | m[29])) / (5*256);
-  const rgb = hlsToRgb(H, L, S).map(x => Math.round(x*255));
-  const color = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-
-  const r = size / 6;
-  ctx.fillStyle = color;
-
-  for (let x = 0; x < 5; x++) {
-    for (let y = 0; y < 5; y++) {
-      const idx = [2,1,0,1,2][x]*5 + y;
-      if (m[idx] % 2 === 0) {
-        const px = x*r + r/2;
-        const py = y*r + r/2;
-        ctx.fillRect(px, py, r, r);
-      }
-    }
-  }
-}
-
-document.getElementById('f').onsubmit = async e => {
-  e.preventDefault();
-  try {
-    let username = document.getElementById('u').value.trim();
-    const id = await getId(username);
-    location.hash = username;
-    draw(id);
-  } catch(e) {
-    alert(e.message);
-  }
-};
-
-
-window.onload = async function() {
-  if (location.hash.length > 1) {
-    const username = location.hash.slice(1);
-    u.value = username;
-    const id = await getId(username);
-    draw(id);
-  }
-};
-
-</script>
+<h2>GitHub Avatar Generator</h2>
+<form id="fetch">
+  <input id="username" placeholder="GitHub username" value="joric"/> <button type="submit" id="fetchBtn">Fetch User ID</button>
+</form>
+<p>
+<form id="randomize">
+  <input id="userid" placeholder="String to hash (e.g. User ID)" value="852547" autofocus/> <button type="submit">Randomize</button>
+</form>
+<p>
+<img id="image" src="" width="420" height="420"/>
 <a href="https://github.com/joric/avatars/" target="_blank" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 </body>
 </html>
-
