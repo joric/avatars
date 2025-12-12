@@ -39,7 +39,7 @@ function generate() {
 
   var options = {
     foreground: rgb,
-    margin: 0.07865,
+    margin: 0.0788,
     size: 420,
     format: 'png'
   };
