@@ -79,7 +79,7 @@ window.onload = function() {
       location.hash = username;
       uid_ctrl.value = id;
       uid_ctrl.select();
-      document.getElementById('fetchBtn').disabled = false;
+      document.getElementById('fetchBtn').disabled = true;
       generate();
     } else {
       resetUsername();
