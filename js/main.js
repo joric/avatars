@@ -104,6 +104,7 @@ window.onload = function() {
   document.getElementById('fetch').onsubmit = async e => {
     e.preventDefault();
     try {
+      document.getElementById('fetchBtn').disabled = true;
       let username = uname_ctrl.value.trim();
       location.hash = username;
       const id = await getId(username);
