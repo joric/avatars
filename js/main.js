@@ -81,6 +81,7 @@ window.onload = function() {
       uid_ctrl.select();
       document.getElementById('fetchBtn').disabled = true;
       generate();
+      document.getElementById('link').href=`https://github.com/${username}/`;
     } else {
       resetUsername();
     }
@@ -91,6 +92,7 @@ window.onload = function() {
     document.getElementById('fetchBtn').disabled = true;
     location.hash = '';
     document.getElementById('select').selectedIndex = 0;
+    document.getElementById('link').style.visibility = 'hidden';
   }
 
   document.getElementById('randomize').onsubmit = async e => {
@@ -111,6 +113,8 @@ window.onload = function() {
       uid_ctrl.value = id;
       uid_ctrl.select();
       generate();
+      document.getElementById('link').style.visibility = 'visible';
+      document.getElementById('link').href=`https://github.com/${username}/`;
     } catch(e) {
       alert(e.message);
     }
@@ -125,6 +129,7 @@ window.onload = function() {
   uname_ctrl.addEventListener('input', function() {
     document.getElementById('fetchBtn').disabled = uname_ctrl.value.length==0;
     document.getElementById('select').selectedIndex = 0;
+    document.getElementById('link').style.visibility = 'hidden';
   })
 
   uid_ctrl.select();
