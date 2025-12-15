@@ -60,6 +60,8 @@ async function loadUserAndGenerate(username) {
     uname_ctrl.value = username;
     uid_ctrl.value = id;
     generate();
+    document.getElementById('link').style.visibility = 'visible';
+    document.getElementById('link').href=`https://github.com/${username}/`;
   } catch (e) {
     alert(e.message);
   }
@@ -81,6 +83,7 @@ window.onload = function() {
       uid_ctrl.select();
       document.getElementById('fetchBtn').disabled = true;
       generate();
+      document.getElementById('link').style.visibility = 'visible';
       document.getElementById('link').href=`https://github.com/${username}/`;
     } else {
       resetUsername();
