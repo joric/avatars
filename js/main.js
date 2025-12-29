@@ -6,6 +6,14 @@ async function getId(username) {
   return j.id;
 }
 
+async function getName(id) {
+  const r = await fetch(`https://api.github.com/user/${id}`);
+  if (!r.ok) throw new Error(`Could not fetch user (${r.status})`);
+  const j = await r.json();
+  console.log('fetched id', id, 'name', j.login);
+  return j.login;
+}
+
 function md5hex(str) {
   return md5(str);
 }
@@ -55,8 +63,25 @@ function generate() {
 
   img.src = 'data:image/png;base64,' + data;
 
-  document.getElementById('lookup').style.visibility = 'visible';
-  document.getElementById('lookup').href = `https://api.github.com/user/${id}`;
+  //document.getElementById('lookup').style.visibility = 'visible';
+  //document.getElementById('lookup').href = `https://api.github.com/user/${id}`;
+}
+
+async function loadUserName() {
+  let uname_ctrl = document.getElementById('username');
+  let uid_ctrl = document.getElementById('userid');
+  const id = uid_ctrl.value;
+  console.log('fetching', id);
+  try {
+    const username = await getName(id);
+    uname_ctrl.value = username;
+    uid_ctrl.value = id;
+    generate();
+    document.getElementById('link').style.visibility = 'visible';
+    document.getElementById('link').href=`https://github.com/${username}/`;
+  } catch (e) {
+    alert(e.message);
+  }
 }
 
 async function loadUserAndGenerate(username) {
@@ -105,7 +130,7 @@ window.onload = function() {
     document.getElementById('link').style.visibility = 'hidden';
   }
 
-  document.getElementById('randomize').onsubmit = async e => {
+  document.getElementById('randomize').onclick = async e => {
     e.preventDefault();
     resetUsername();
     uid_ctrl.value = Math.floor(Math.random() * 10000000);
@@ -113,7 +138,12 @@ window.onload = function() {
     generateOnChange();
   }
 
-  document.getElementById('fetch').onsubmit = async e => {
+  document.getElementById('idForm').onsubmit = async e => {
+    e.preventDefault();
+    loadUserName();
+  }
+
+  document.getElementById('nameForm').onsubmit = async e => {
     e.preventDefault();
     try {
       document.getElementById('fetchBtn').disabled = true;

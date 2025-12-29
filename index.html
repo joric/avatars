@@ -54,7 +54,7 @@ form {
 <div class="content">
 <h2>GitHub Avatar Generator</h2>
 
-<form id="fetch">
+<form id="nameForm">
   <input id="username" placeholder="GitHub username" value="joric"/> <button type="submit" id="fetchBtn" disabled>Get User ID</button>
   <select id="select">
     <option></option>
@@ -71,9 +71,10 @@ form {
 <img id="image" src=""/>
 
 
-<form id="randomize">
-  <input id="userid" placeholder="String to hash (e.g. User ID)" value="852547" autofocus/> <button type="submit">Random</button>
-  <span><a id="lookup" href="https://github.com/joric/" target="_blank">Lookup</a></span>
+<form id="idForm">
+  <input id="userid" placeholder="String to hash (e.g. User ID)" value="852547" autofocus/>
+  <button type="submit" id="getName">Get Name</button>
+  <button type="button" id="randomize">Random</button>
 </form>
 
 String hash (MD5): <span id="hash"></span>
