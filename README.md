@@ -13,9 +13,7 @@ Original size is 420x420 pixels. See [generate.py](https://github.com/joric/avat
 ## wjhbr
 
 The popular competitive programming [meme](https://www.reddit.com/r/196/comments/zudu8i/competitive_programing_rule/)
-features user [whjbr](https://github.com/wjhbr/)
-(formerly [WJHBradley](https://web.archive.org/web/20201208221559/https://github.com/WJHBradley/))
-but with a different (non-matching) github-like 5x5 avatar.
+features user [whjbr](https://github.com/wjhbr/), but with a different (non-matching) github-like 5x5 avatar.
 I tried [bruteforcing](https://gist.github.com/joric/ecf4c6f3c6fe06bbe2cbfcf60d0f42ab) it
 and found id [260864](https://api.github.com/user/260864) but it seems deleted
 (neighbouring users [260863](https://api.github.com/user/260863), and [260865](https://api.github.com/user/260865) exist).
