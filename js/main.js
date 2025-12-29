@@ -55,6 +55,8 @@ function generate() {
 
   img.src = 'data:image/png;base64,' + data;
 
+  document.getElementById('lookup').style.visibility = 'visible';
+  document.getElementById('lookup').href = `https://api.github.com/user/${id}`;
 }
 
 async function loadUserAndGenerate(username) {
