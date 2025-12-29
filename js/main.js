@@ -138,7 +138,7 @@ window.onload = function() {
   document.getElementById('randomize').onclick = async e => {
     e.preventDefault();
     resetUsername();
-    uid_ctrl.value = Math.floor(Math.random() * 200000000);
+    uid_ctrl.value = Math.floor(Math.random() * 150000000); // about 150 million users as of 2025
     uid_ctrl.select();
     generateOnChange();
   }
