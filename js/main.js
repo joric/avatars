@@ -78,6 +78,7 @@ async function loadUserName() {
   try {
     const username = await getName(id);
     uname_ctrl.value = username;
+    location.hash = username;
     uid_ctrl.value = id;
     generate();
     document.getElementById('link').style.visibility = 'visible';
