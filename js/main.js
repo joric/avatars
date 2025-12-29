@@ -75,7 +75,6 @@ async function loadUserName() {
   let uname_ctrl = document.getElementById('username');
   let uid_ctrl = document.getElementById('userid');
   const id = uid_ctrl.value;
-  console.log('fetching', id);
   try {
     const username = await getName(id);
     uname_ctrl.value = username;
