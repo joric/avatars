@@ -69,6 +69,8 @@ function generate() {
 
   //document.getElementById('lookup').style.visibility = 'visible';
   //document.getElementById('lookup').href = `https://api.github.com/user/${id}`;
+
+  document.getElementById('getName').disabled = document.getElementById('username').value!='';
 }
 
 async function loadUserName() {
@@ -191,6 +193,5 @@ window.onload = function() {
   } else {
     generate();
   }
-
 };
 
