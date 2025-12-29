@@ -165,7 +165,7 @@ window.onload = function() {
     }
   };
 
-  'input keyup keydown keypress change'.split(' ').forEach(function(e){
+  'input keyup change'.split(' ').forEach(function(e){
     uid_ctrl.addEventListener(e, onChange, false);
   });
 
