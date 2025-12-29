@@ -78,11 +78,12 @@ async function loadUserName() {
   try {
     const username = await getName(id);
     uname_ctrl.value = username;
-    location.hash = username;
     uid_ctrl.value = id;
     generate();
     document.getElementById('link').style.visibility = 'visible';
     document.getElementById('link').href=`https://github.com/${username}/`;
+    clearTimeout(timeout);
+    location.hash = username;
   } catch (e) {
     alert(e.message);
   }
