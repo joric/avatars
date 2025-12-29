@@ -8,7 +8,7 @@ Original (reverse-engineered) GitHub avatars (identicons) generator
 
 The picture above is an identicon for user "joric" with id 852547, see user id here https://api.github.com/users/joric
 
-Original size is 420x420 pixels. See `generate.py` for details.
+Original size is 420x420 pixels. See [generate.py](https://github.com/joric/avatars/blob/main/generate.py) for details (image URL is https://github.com/identicons/joric.png).
 
 ## wjhbr
 
@@ -17,7 +17,7 @@ Those avatars do not match. I tried [bruteforcing](https://gist.github.com/joric
 Neighbour users ([260863](https://api.github.com/user/260863) and [260865](https://api.github.com/user/260865)) exist.
 There's a [related stackoverflow question](https://stackoverflow.com/questions/49103466/how-to-programmatically-determine-if-a-github-account-uses-the-default-profile-p), that features this avatar.
 The image is not here also: https://github.com/identicons/260864.png (looks like this link only works for identicons 0..32768).
-If you know the origin of this avatar, write me via issues section.
+If you know the origin of this avatar, write me via the [issues](https://github.com/joric/avatars/issues) section.
 
 ## References
 
