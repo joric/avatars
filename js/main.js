@@ -138,8 +138,14 @@ window.onload = function() {
   uid_ctrl.select();
 
   if (location.hash.length > 1) {
-    const username = location.hash.slice(1);
-    loadUserAndGenerate(username);
+    const str = location.hash.slice(1);
+    if (/^\d+$/.test(str)) {
+      resetUsername();
+      document.getElementById('userid').value = str;
+      generate()
+    } else {
+      loadUserAndGenerate(str);
+    }
   } else {
     generate();
   }
