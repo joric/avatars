@@ -97,10 +97,10 @@ window.onload = function() {
     }
   }
 
-  function resetUsername() {
+  function resetUsername(preserveHash) {
     document.getElementById('username').value = '';
     document.getElementById('fetchBtn').disabled = true;
-    location.hash = '';
+    if (!preserveHash) location.hash = '';
     document.getElementById('select').selectedIndex = 0;
     document.getElementById('link').style.visibility = 'hidden';
   }
@@ -147,7 +147,7 @@ window.onload = function() {
   if (location.hash.length > 1) {
     const str = location.hash.slice(1);
     if (/^\d+$/.test(str)) {
-      resetUsername();
+      resetUsername(true);
       document.getElementById('userid').value = str;
       generate()
     } else {
