@@ -17,6 +17,7 @@ features user [whjbr](https://github.com/wjhbr/), but with a different (non-matc
 I tried [bruteforcing](https://gist.github.com/joric/ecf4c6f3c6fe06bbe2cbfcf60d0f42ab) it
 and found id [260864](https://joric.github.io/avatars/#260864) but it seems deleted
 (neighbouring users [260863](https://api.github.com/user/260863), and [260865](https://api.github.com/user/260865) exist).
+I guess someone (perhaps [@hsluoyz](https://stackoverflow.com/questions/49103466/how-to-programmatically-determine-if-a-github-account-uses-the-default-profile-p) or [/u/yukiaddiction](https://www.reddit.com/r/196/comments/zudu8i/competitive_programing_rule/)) created a github user just for the avatar, and then deleted the user.
 If you know the origin of this avatar, write me via the [issues](https://github.com/joric/avatars/issues) section.
 
 ## References
