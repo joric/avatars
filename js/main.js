@@ -1,5 +1,7 @@
 async function getId(username) {
-  const r = await fetch(`https://api.github.com/users/${username}`);
+  const url = `https://api.github.com/users/${username}`;
+  console.log('fetching', url);
+  const r = await fetch(url);
   if (!r.ok) throw new Error(`Could not fetch user (${r.status})`);
   const j = await r.json();
   console.log('fetched username', username, 'id', j.id);
@@ -7,7 +9,9 @@ async function getId(username) {
 }
 
 async function getName(id) {
-  const r = await fetch(`https://api.github.com/user/${id}`);
+  const url = `https://api.github.com/user/${id}`;
+  console.log('fetching', url);
+  const r = await fetch(url);
   if (!r.ok) throw new Error(`Could not fetch user (${r.status})`);
   const j = await r.json();
   console.log('fetched id', id, 'name', j.login);
