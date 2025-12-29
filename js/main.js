@@ -16,7 +16,12 @@ let timeout = null;
 function onChange(e) {
   //console.log('onChange', e);
   clearTimeout(timeout);
-  timeout = setTimeout(generate, TIMEOUT);
+  timeout = setTimeout(generateOnChange, TIMEOUT);
+}
+
+function generateOnChange() {
+  location.hash = document.getElementById('userid').value;
+  generate();
 }
 
 function generate() {
@@ -103,7 +108,7 @@ window.onload = function() {
     resetUsername();
     uid_ctrl.value = Math.floor(Math.random() * 10000000);
     uid_ctrl.select();
-    generate();
+    generateOnChange();
   }
 
   document.getElementById('fetch').onsubmit = async e => {
