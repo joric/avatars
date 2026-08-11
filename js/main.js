@@ -419,10 +419,10 @@ function resetUsername(preserveHash) {
   updateLink();
 }
 
-function updateLink(username) {
+function updateLink(username, userid) {
   const linkEl = document.getElementById('link');
   linkEl.innerHTML = username
-    ? `<a href="https://github.com/${username}/" target="_blank">https://github.com/${username}/</a>`
+    ? `<a class="userlink" href="https://github.com/${username}/" target="_blank"><img width=32 height=32 src="https://avatars.githubusercontent.com/u/${userid}?v=4">&nbsp;${username}</a>`
     : 'Unknown Username';
 }
 
@@ -560,7 +560,7 @@ async function fetchID() {
     const id = await GitHubApi.getUserIdByUsername(username);
     document.getElementById('userid').value = id;
     generate();
-    updateLink(username);
+    updateLink(username, id);
   } catch (e) {
     alert(e.message);
   }
@@ -580,7 +580,7 @@ async function fetchUsername() {
     usernameEl.value = username;
     useridEl.value = id;
     generate();
-    updateLink(username);
+    updateLink(username, id);
     clearTimeout(hashChangeTimer);
     window.location.hash = username;
     document.title = `${username} - ${defaultTitle}`;
@@ -600,7 +600,7 @@ async function loadUserAndGenerate(username) {
     usernameEl.value = username;
     useridEl.value = id;
     generate();
-    updateLink(username);
+    updateLink(username, id);
   } catch (e) {
     alert(e.message);
   }
@@ -669,7 +669,7 @@ window.onload = function () {
       useridEl.value = id;
       useridEl.select();
       generate();
-      updateLink(text);
+      updateLink(text, id);
 
     } else if (id) {
       usernameEl.value = '';
