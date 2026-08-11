@@ -422,7 +422,7 @@ function resetUsername(preserveHash) {
 function updateLink(username, userid) {
   const linkEl = document.getElementById('link');
   linkEl.innerHTML = username
-    ? `<a class="userlink" href="https://github.com/${username}/" target="_blank"><img width=32 height=32 src="https://avatars.githubusercontent.com/u/${userid}?v=4">&nbsp;${username}</a>`
+    ? `<a class="userlink" href="https://github.com/${username}/" target="_blank"><img width=32 height=32 src="https://avatars.githubusercontent.com/u/${userid}?v=4&size=32">&nbsp;${username}</a>`
     : 'Unknown Username';
 }
 
